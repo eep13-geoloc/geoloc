@@ -67,6 +67,7 @@ public class LocationJobService extends JobService {
     }
 
     private void sendNotificationIntents(List<Place> places) {
+        //TODO send intent to processing service or do filtering here and send notifications
         Log.i(TAG, "Got " + places.size());
     }
 
