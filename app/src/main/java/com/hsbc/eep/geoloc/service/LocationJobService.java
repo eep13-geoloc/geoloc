@@ -50,6 +50,7 @@ public class LocationJobService extends JobService {
                     if (likelyPlaces != null) {
                         for (PlaceLikelihood placeLikelihood : likelyPlaces) {
                             final Place p = new Place(
+                                    placeLikelihood.getPlace().getId(),
                                     placeLikelihood.getPlace().getName().toString(),
                                     placeLikelihood.getLikelihood(),
                                     placeLikelihood.getPlace().getAddress(),

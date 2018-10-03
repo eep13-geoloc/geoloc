@@ -3,16 +3,27 @@ package com.hsbc.eep.geoloc.model;
 import java.util.Objects;
 
 public class Place {
+    private CharSequence id;
     private CharSequence name;
     private float likehood;
     private CharSequence address;
     private CharSequence telephone;
 
-    public Place(CharSequence name, float likehood, CharSequence address, CharSequence telephone) {
+    public Place(
+            CharSequence id,
+            CharSequence name,
+            float likehood,
+            CharSequence address,
+            CharSequence telephone) {
+        this.id = id;
         this.name = name;
         this.likehood = likehood;
         this.address = address;
         this.telephone = telephone;
+    }
+
+    public CharSequence getId() {
+        return id;
     }
 
     public CharSequence getName() {
@@ -51,7 +62,8 @@ public class Place {
     @Override
     public String toString() {
         return "Place{" +
-                "name=" + name +
+                "id=" + id +
+                ", name=" + name +
                 ", likehood=" + likehood +
                 ", address=" + address +
                 ", telephone=" + telephone +
