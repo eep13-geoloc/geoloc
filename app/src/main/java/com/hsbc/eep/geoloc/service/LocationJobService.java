@@ -27,10 +27,8 @@ public class LocationJobService extends JobService {
     @Override
     public boolean onStartJob(JobParameters params) {
         Log.i(TAG, "Started job!");
-//        Intent service = new Intent(getApplicationContext(), LocalWordService.class);
-//        getApplicationContext().startService(service);
         getCurrentPlace();
-//        Util.scheduleJob(getApplicationContext()); // reschedule the job
+        Util.scheduleJob(getApplicationContext()); // reschedule the job
         return true;
     }
 
