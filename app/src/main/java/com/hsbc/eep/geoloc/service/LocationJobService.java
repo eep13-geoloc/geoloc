@@ -75,44 +75,39 @@ public class LocationJobService extends JobService {
 
     private void sendNotificationIntents(List<Place> places) {
         //TODO send intent to processing service or do filtering here and send notifications
-        Log.i(TAG, "Got " + places.size());
-
-        Map<String, String> offersMap = new HashMap<String, String>();
-        offersMap.put("Nike","10");
-        offersMap.put("Adidas","10");
-        offersMap.put("TGIF","15");
-        offersMap.put("Apple Store","5");
-        offersMap.put("Samsung","8");
-
-        String strNot1="There is flat ";
-        String strNot2="% off on ";
-        String strNot3=" Store Near You. Ejoy!!!";
-        String finalNotification="";
-        StringBuilder sb = new StringBuilder();
-        for(int i=0;i<places.size();i++){
-            String offer= offersMap.get(places.get(i).getName());
-
-            sb = sb.append(strNot1).append(offer).append(strNot2).append(places.get(i).getName()).append(strNot3);
-            sb.append(System.getProperty("line.separator"));
-            //finalNotification = finalNotification.concat(strNot1+offer+strNot2+places.get(i).getName()+strNot3+"\n");
+        for (Place p : places) {
+            Log.i(TAG, "Got " + p.toString());
         }
 
-        finalNotification=sb.toString();
-        sendNotification(finalNotification);
-        finalNotification="";
+        Map<String, String> offersMap = new HashMap<>();
+        offersMap.put("ChIJSQEO26gCdkgRIkXQQ-i2MLU","10");
+        offersMap.put("ChIJ-7DjHKkCdkgRES9oQjiuC1Q","10");
 
+        String strNot1="There is flat ";
+        String strNot2="% off";
+
+        for(int i=0;i<places.size();i++){
+            CharSequence id = places.get(i).getId();
+            String offer= offersMap.get(id);
+            if(offersMap.containsKey(id)) {
+                Log.i(TAG, "Creating notification for "+id);
+                CharSequence shopName = places.get(i).getName();
+                String msg = strNot1 + offer + strNot2 + shopName;
+                sendNotification(msg, shopName.toString());
+            }
+        }
     }
 
-    private void sendNotification(String strNot){
+    private void sendNotification(String strNot, String shopName){
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
-        builder.setContentTitle("HSBC Offers")
+        builder.setContentTitle("HSBC Offers - "+ shopName)
                 .setContentText(strNot)
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC);//to show content in lock screen
 
         NotificationManager mNotificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        mNotificationManager.notify(001, builder.build());
+        mNotificationManager.notify(strNot.hashCode(), builder.build());
     }
 
     @Override
