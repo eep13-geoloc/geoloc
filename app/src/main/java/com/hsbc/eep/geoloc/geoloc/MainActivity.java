@@ -14,10 +14,13 @@ import com.google.android.gms.location.places.PlaceLikelihoodBufferResponse;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.hsbc.eep.geoloc.model.Place;
 
+//TODO move it to service
 public class MainActivity extends AppCompatActivity {
 
     private final int gpsPermissionsReturnCode = 7;
+    private final String TAG = "GeoLoc";
 
     private void getCurrentPlace() {
         PlaceDetectionClient mPlaceDetectionClient =
@@ -30,16 +33,21 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<PlaceLikelihoodBufferResponse> task) {
                 PlaceLikelihoodBufferResponse likelyPlaces = task.getResult();
-                if(likelyPlaces != null) {
+                if (likelyPlaces != null) {
                     for (PlaceLikelihood placeLikelihood : likelyPlaces) {
-                        Log.i("LOC", String.format("Place '%s' has likelihood: %g",
-                                placeLikelihood.getPlace().getName(),
-                                placeLikelihood.getLikelihood()));
+                        Place p = new Place(placeLikelihood.getPlace().getName().toString(), placeLikelihood.getLikelihood());
+                        createNotification(p);
                     }
                     likelyPlaces.release();
                 }
             }
         });
+    }
+
+    private void createNotification(Place place) {
+        Log.i(TAG, String.format("Place '%s' has likelihood: %g",
+                place.getName(),
+                place.getLikehood()));
     }
 
     @Override
@@ -52,13 +60,9 @@ public class MainActivity extends AppCompatActivity {
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     getCurrentPlace();
                 } else {
-                    Log.i("LOC", "Failed to grant permissions!");
+                    Log.i("LOC", "Failed to grant permission!");
                 }
-                return;
             }
-
-            // other 'case' lines to check for other
-            // permissions this app might request.
         }
     }
 
@@ -69,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             Log.i("LOC", "permissions for geo location are not granted");
-            final String missingPerimissions[] = { Manifest.permission.ACCESS_FINE_LOCATION };
+            final String missingPerimissions[] = {Manifest.permission.ACCESS_FINE_LOCATION};
             ActivityCompat.requestPermissions(this, missingPerimissions, gpsPermissionsReturnCode);
         } else {
             getCurrentPlace();
