@@ -35,7 +35,12 @@ public class MainActivity extends AppCompatActivity {
                 PlaceLikelihoodBufferResponse likelyPlaces = task.getResult();
                 if (likelyPlaces != null) {
                     for (PlaceLikelihood placeLikelihood : likelyPlaces) {
-                        Place p = new Place(placeLikelihood.getPlace().getName().toString(), placeLikelihood.getLikelihood());
+                        final Place p = new Place(
+                                placeLikelihood.getPlace().getName().toString(),
+                                placeLikelihood.getLikelihood(),
+                                placeLikelihood.getPlace().getAddress(),
+                                placeLikelihood.getPlace().getPhoneNumber()
+                        );
                         createNotification(p);
                     }
                     likelyPlaces.release();
@@ -45,8 +50,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void createNotification(Place place) {
-        Log.i(TAG, String.format("Place '%s' has likelihood: %g",
+        Log.i(TAG, String.format("Place '%s', '%s', '%s' has likelihood: %g",
                 place.getName(),
+                place.getAddress(),
+                place.getTelephone(),
                 place.getLikehood()));
     }
 
